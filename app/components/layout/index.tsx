@@ -41,7 +41,7 @@ class Layout extends React.Component<Props> {
       <Grid
         container
         direction="row"
-        justifContent="flex-start"
+        justify="flex-start"
         alignItems="stretch"
         style={isMobile ? styleGridIsMobile : styleGrid}
       >

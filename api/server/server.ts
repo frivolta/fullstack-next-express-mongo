@@ -1,22 +1,33 @@
+import * as cors from 'cors';
 import * as express from 'express';
+import * as mongoose from 'mongoose';
+
+import api from './api';
 
 // eslint-disable-next-line
 require('dotenv').config();
 
+mongoose.connect(process.env.MONGO_URL_TEST).then(() => {
+  console.info('Connected to MongoDB ', process.env.MONGO_URL_TEST);
+});
+
 const server = express();
+
+server.use(
+  cors({
+    origin: process.env.URL_APP,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  }),
+);
 
 server.use(express.json());
 
-server.get('/api/v1/public/get-user', (_, res) => {
-  console.log('API server got request from APP server or browser');
-  res.json({ user: { email: 'fr@builderbook.org' } });
-});
+api(server);
 
 server.get('*', (_, res) => {
   res.sendStatus(403);
 });
-
-console.log(process.env.PORT_API, process.env.URL_API);
 
 server.listen(process.env.PORT_API, () => {
   console.log(`> Ready on ${process.env.URL_API}`);
